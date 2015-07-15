@@ -1,0 +1,98 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema escritor7
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `escritor7` ;
+
+-- -----------------------------------------------------
+-- Schema escritor7
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `escritor7` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `escritor7` ;
+
+-- -----------------------------------------------------
+-- Table `escritor7`.`software`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escritor7`.`software` ;
+
+CREATE TABLE IF NOT EXISTS `escritor7`.`software` (
+  `id_software` INT NOT NULL AUTO_INCREMENT,
+  `linguagem` VARCHAR(45) NOT NULL,
+  `nome` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_software`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `escritor7`.`objeto`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escritor7`.`objeto` ;
+
+CREATE TABLE IF NOT EXISTS `escritor7`.`objeto` (
+  `id_objeto` INT NOT NULL AUTO_INCREMENT,
+  `software_id_software` INT NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
+  `persistencia` VARCHAR(500) NULL,
+  PRIMARY KEY (`id_objeto`),
+  INDEX `fk_objeto_software_idx` (`software_id_software` ASC),
+  CONSTRAINT `fk_objeto_software`
+    FOREIGN KEY (`software_id_software`)
+    REFERENCES `escritor7`.`software` (`id_software`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `escritor7`.`banco_de_dados`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escritor7`.`banco_de_dados` ;
+
+CREATE TABLE IF NOT EXISTS `escritor7`.`banco_de_dados` (
+  `id_banco_de_dados` INT NOT NULL AUTO_INCREMENT,
+  `software_id_software` INT NOT NULL,
+  `nome_do_banco` VARCHAR(45) NULL,
+  `sistema_gerenciador_de_banco` VARCHAR(45) NULL,
+  `host` VARCHAR(45) NULL,
+  `pass` VARCHAR(45) NULL,
+  `usuario` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_banco_de_dados`),
+  INDEX `fk_banco_de_dados_software1_idx` (`software_id_software` ASC),
+  CONSTRAINT `fk_banco_de_dados_software1`
+    FOREIGN KEY (`software_id_software`)
+    REFERENCES `escritor7`.`software` (`id_software`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `escritor7`.`atributo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escritor7`.`atributo` ;
+
+CREATE TABLE IF NOT EXISTS `escritor7`.`atributo` (
+  `id_atributo` INT NOT NULL AUTO_INCREMENT,
+  `objeto_id_objeto` INT NOT NULL,
+  `nome` VARCHAR(45) NULL,
+  `tipo` VARCHAR(45) NULL,
+  `indice` VARCHAR(45) NULL,
+  `relacionamento_com_objeto` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_atributo`),
+  INDEX `fk_atributo_objeto1_idx` (`objeto_id_objeto` ASC),
+  CONSTRAINT `fk_atributo_objeto1`
+    FOREIGN KEY (`objeto_id_objeto`)
+    REFERENCES `escritor7`.`objeto` (`id_objeto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
