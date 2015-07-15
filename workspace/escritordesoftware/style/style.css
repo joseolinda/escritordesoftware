@@ -1,0 +1,137 @@
+/* CSS Document */
+
+body
+{
+	
+	background-color:#5DD0C0;	
+	font:Arial, Helvetica, sans-serif;
+	color:#FFF;
+
+	
+}
+
+
+#topo{
+
+	width: 1000px;
+	height:223px;
+	margin: 0px auto;
+	padding: 0px 0px 0px 0px;
+
+
+
+
+}
+#conteiner{
+	background-color:#00A08A;
+	width: 1000px;
+	height:1000px;
+	margin: 0px auto;
+	padding: 0px 0px 0px 0px;
+
+	
+	
+}
+
+#esquerda{
+
+	padding-left:10px;
+	padding-right:10px;
+	margin-left:20px;
+	margin-top:40px;
+	width:440px;
+	float:left;
+	background-color:#00685A;
+	
+}
+#conteiner #esquerda .classe {
+	
+	background-color:#00A08A;
+	
+}
+#conteiner #esquerda .classe li{
+	
+list-style: none;
+	
+}
+#conteiner #esquerda .classe h1{
+	
+	background-color:#1E786C;
+	
+}
+
+#direita{
+	padding-left:10px;
+	padding-right:10px;
+	margin-left:20px;
+	margin-top:40px;
+	width:440px;
+	float:left;
+	background-color:#00685A;
+	
+}
+
+
+
+a{
+
+	color:#FFF;	
+	
+	
+}
+
+
+fieldset{
+
+	border:none;	
+	
+}
+
+fieldset legend{
+
+	font-size:30px;
+
+	
+}
+label{
+	font-size:30px;
+	display: block;
+
+
+
+}
+
+input{
+
+	margin-top:5px;
+	margin-left:30px;
+	border:none;
+	width:300px;	
+	height:30px;
+	display: block;
+	color: #00685A;
+	font-size: 13px;
+	
+}
+select{
+	margin-top:5px;
+	margin-left:30px;
+	width:300px;	
+	height:30px;
+	border:none;	
+	color: #00685A;
+	font-size: 13px;
+	
+}
+
+
+
+#topo img{
+	
+	margin-left:200px;
+	margin-top:30px;
+
+
+
+	
+}
