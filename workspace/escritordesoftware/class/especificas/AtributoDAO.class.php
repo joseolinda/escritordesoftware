@@ -1,126 +1,167 @@
-
 <?php
-				
+
+
 class AtributoDAO
 {
+	public $Conexao;
 
-public $Conexao;
-		
+
 	public function __construct()
 	{
-				$this->Conexao = Conexao::retornaConexaoComBanco();	
+		$this->Conexao = Conexao::retornaConexaoComBanco();
+
 	}
+
 
 	public function inserir(Atributo $atributo)
 	{
-	
-			
-		$instrucao = new TSqlInsert();
-		$instrucao->setEntity("atributo");
-	
-		
 
 
-				if($atributo->getNome() != null)
-				{
-							
-					$instrucao->setRowData("nome", $atributo->getNome());
-					
-				}
-				
 
-				if($atributo->getTipo() != null)
-				{
-							
-					$instrucao->setRowData("tipo", $atributo->getTipo());
-					
-				}
-				
-
-				if($atributo->getTamanho() != null)
-				{
-							
-					$instrucao->setRowData("tamanho", $atributo->getTamanho());
-					
-				}
-				
-
-				if($atributo->getIndice() != null)
-				{
-							
-					$instrucao->setRowData("indice", $atributo->getIndice());
-					
-				}
-				
-
-				if($atributo->getAuto_increment() != null)
-				{
-							
-					$instrucao->setRowData("auto_increment", $atributo->getAuto_increment());
-					
-				}
-				
-			if($this->Conexao->query($instrucao->getInstruction()))
-			{
-				echo 'Inserido com sucesso! ';
-			}
-			else
-			{
-				echo 'erro ';
-				
-			}
-		
-	}
-	public function retornaObjetos()
-	{
-		$sql = "SELECT * FROM atributo ORDER BY id DESC";
-		$result = $this->Conexao->query($sql);
-		$x = 0;
-		foreach($result as $linha)
+		if($atributo->getId() != null)
 		{
-				$atributo = new Atributo;
-						
-				$atributo->setNome($linha['nome']);
-					//um vetor vai receber esse objeto em cada linha
-					
-					
-					
-					$atributo->setTipo($linha['tipo']);
-					//um vetor vai receber esse objeto em cada linha
-					
-					
-					
-					$atributo->setTamanho($linha['tamanho']);
-					//um vetor vai receber esse objeto em cada linha
-					
-					
-					
-					$atributo->setIndice($linha['indice']);
-					//um vetor vai receber esse objeto em cada linha
-					
-					
-					
-					$atributo->setAuto_increment($linha['auto_increment']);
-					//um vetor vai receber esse objeto em cada linha
-					
-					
-					
-					
-			
+			$instrucao = new TSqlUpdate();
+			$instrucao->setEntity("id_atributo");
 				
-				$objetos[$x] = $atributo;
-				$x = $x + 1;
+				
+			$criteria = new TCriteria();
+			$criteria->add(new TFilter('id_atributo', '=', $Id->getId()));
+			$instrucao->setCriteria($criteria);
+
+
+		}
+		else
+		{
+
+			$instrucao = new TSqlInsert();
+			$instrucao->setEntity("atributo");
 				
 		}
-			if(isset($objetos))
+
+
+
+		if($atributo->getNome()!= null)
+		{
+
+			$instrucao->setRowData("nome", $atributo->getNome());
+
+		}
+
+
+
+		if($atributo->getId_objeto() != null)
+		{
+
+			$instrucao->setRowData("id_objeto", $atributo->getId_objeto());
+
+		}
+
+
+
+		if($atributo->getTamanho() != null)
+		{
+
+			$instrucao->setRowData("tamanho", $atributo->getTamanho());
+
+		}
+		if($atributo->getTipo() != null)
+		{		
+			$instrucao->setRowData("tipo", $atributo->getTipo());		
+		}
+
+
+		echo $instrucao->getInstruction();
+
+		if($this->Conexao->query($instrucao->getInstruction()))
+		{
+
+			echo 'Inserido com sucesso! ';
+			if($atributo->getId() != null)
 			{
-			return $objetos;
+				//O objeto tem id?
 			}
 			else
-			{
-			return false;
+			{//Não? Então insira o id
+				$atributo->setId($this->Conexao->lastInsertId());
 			}
+			//Agora pegaremos a lista de atributos que sao objetos
+			//em cada um faremos o seguinte
+			//Primeiro perguntamos se ele existe.
+			//Precisa fazer um foreach aqui
+
+
+
+
+		}
+		else
+		{
+
+			echo 'Erro! ';
+
+		}
+			
+
+
+
+	}//fecha metodo inserir
+	
+	public function retornaArrayDeAtributos(Objeto $objeto)
+	{
+		if($objeto->getId() != null)
+		{
+			$idDoObjeto = $objeto->getId();
+			$sql = "SELECT 
+					atributo.id_atributo, 
+					atributo.nome, 
+					atributo.tipo, 
+					atributo.tamanho, 
+					atributo.id_objeto FROM atributo WHERE id_objeto = $idDoObjeto";
+			$result = $this->Conexao->query($sql);
+			$n = 0;
+			foreach ($result as $linha)
+			{
+				$atributo = new Atributo();
+				$atributo->setId($linha['id_atributo']);
+				$atributo->setId_objeto($linha['id_objeto']);
+				$atributo->setNome($linha['nome']);
+				$atributo->setTipo($linha['tipo']);
+				$atributo->setTamanho($linha['tamanho']);
+				
+				
+				$arrayDeAtributos[$n] = $atributo;
+				$n++;
+			}
+		}
+		
+		if($n>0)
+		{
+		
+		return $arrayDeAtributos;
+		}
 	}
+	
+	
+	public function retornaLista()
+	{
+
+		$sql = new TSqlSelect();
+		$sql->setEntity('atributo');
+
+
+			
+		$instrucao = $sql->addColumn('id');
+
+		$instrucao = $sql->addColumn('nome');
+
+		$instrucao = $sql->addColumn('software');
+
+		$instrucao = $sql->addColumn('banco_de_dados');
+
+
+		$result = $this->Conexao->query($sql->getInstruction());
+
+		return $result;
+	}
+
 }
-								
 ?>

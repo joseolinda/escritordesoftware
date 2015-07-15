@@ -1,44 +1,68 @@
-
 <?php
 
+/**
+ * Classe feita para manipulação do objeto software
+ * feita automaticamente com programa gerador de software inventado por
+ * Autor Jefferson Uchôa Ponte
+ *
+ *
+ */
 class Software
 {
 
-	private $Nome = 'meu_software';
-	private $Objetos;
-	
+	private $Id;
+	private $Nome;
+	private $ArrayDeObjetos;
+	private $Banco_de_dados;
 
-	public function __construct($nome_do_software, $array_de_objetos){
-		$this->Objetos = $array_de_objetos;
-		$this->Nome = $nome_do_software;
-		
-		
+
+	public function setId($id)
+	{
+		$this->Id = $id;
+
 	}
+
+	public function getId()
+	{
+		return $this->Id;
+
+	}
+
+
 	public function setNome($nome)
 	{
-			
-		$this->Nome= $nome;
-			
+		$this->Nome = $nome;
+
 	}
+
 	public function getNome()
 	{
-			
 		return $this->Nome;
-			
+
 	}
-		
-	public function setObjetos($objetos)
+	public function setBanco_de_dados($banco_de_dados)
 	{
-			
-		$this->Objetos= $objetos;
-			
+		$this->Banco_de_dados = $banco_de_dados;
 	}
-	public function getObjetos()
+	public function getBanco_de_dados()
 	{
-			
-		return $this->Objetos;
-			
+		return $this->Banco_de_dados;
 	}
-		
+	public function setArrayDeObjetos($array_de_objetos)
+	{
+		$this->ArrayDeObjetos = $array_de_objetos;
+	}
+	public function getArrayDeObjetos(){
+		return $this->ArrayDeObjetos;
+	}
+	public function setBancoDeDados($bancoDeDados){
+		$this->Banco_de_dados = $bancoDeDados;
+	}
+	public function getBancoDeDados()
+	{
+		return $this->Banco_de_dados;
+
+	}
+
 }
 ?>
