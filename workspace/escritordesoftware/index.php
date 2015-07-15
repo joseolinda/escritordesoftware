@@ -1,19 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
-<!--
-Design by Free CSS Templates
-http://www.freecsstemplates.org
-Released for free under a Creative Commons Attribution 2.5 License
-
-Name       : WaterDrop 
-Description: A two-column, fixed-width design with dark color scheme.
-Version    : 1.0
-Released   : 20130505
-
--->
-<html>
-<head>
 <?php
 
 function __autoload($classe){
@@ -32,82 +16,87 @@ function __autoload($classe){
 
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Escritor de Software</title>
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700" rel="stylesheet" type="text/css" />
-<link href="default.css" rel="stylesheet" type="text/css" media="all" />
-<!--[if IE 6]>
-<link href="default_ie6.css" rel="stylesheet" type="text/css" />
-<![endif]-->
+<title>Escritor De Software</title>
+<link rel="stylesheet" type="text/css" href="style/style.css"/>
 </head>
+
 <body>
-<div id="wrapper">
-	<div id="header">
-		<div id="logo">
-			<h1><a href="#">Escritor de Software</a></h1>
-			<p>Frase de Efeito <a href="http://www.freecsstemplates.org/" rel="nofollow"></a></p>
-		</div>
-	</div>
-	<!--
-	<div id="menu">
-	  
-		<ul>
-			<li ><a href="#">Home</a></li>
-			<li class="current_page_item"><a href="#">Coleção</a></li>
-			<li><a href="#">Loja Virtual</a></li>
-			<li  ><a href="#">Blog</a></li>
-			<li><a href="#">Contato</a></li>
 
+	<div id="topo">
+    	<img src="images/logo.png" alt="" />
+    </div>
 
-		</ul>
+	<div id="conteiner">
+		<div id="esquerda">
+        	<h1>Softwares Criados</h1>
+            <ul>        	
+        	<?php 
+        	
+        	$conexao = Conexao::retornaConexaoComBanco();
+        	$softwaredao = new SoftwareDAO();
+        	$softwaredao->setConexao($conexao);
+        	$softwares = $softwaredao->retornaSoftwaresComId();
+        	if($softwares)
+			{
+        		foreach ($softwares as $software)
+				{
+        			echo '<li><a href="software.php?idsoftware='.$software->getId().'">'.$software->getNome().'</a></li>';
+        		}
+        	}
+        	else
+			{
+				echo "Nenhum software adicionado ainda.";
 		
-		
-	</div>
-	
-	
-	<div id="banner"><img src="images/header-image-bg.jpg" width="1200" height="400" alt="" /></div>
-	-->
-	
-	<div id="three-columns">
-		<div class="content">
-			<div id="column1">
-				<h2>Novo Software</h2>
-				<?php 
-				include 'forms/forminserirsoftware.php';
-				echo '<br><h2>Softwares Já Criados</h2>';
-				
-				$softwaredao = new SoftwareDAO();
-				$result = $softwaredao->retornaLista();
-				echo '<br><ul>';
-				foreach ($result as $linha){
-					
-					echo '<li><a href="software.php?software_id='.$linha['id_software'].'">'.$linha['nome'].'</a></li>';
-				}
-				
-				echo '</ul>';
-				
-				?>
-				
-			</div>
-			<div id="column2">
-			<!-- 
-				<h2>Novo Objeto</h2>
-				
-				 -->
-			</div>
-			<div id="column3">
-			<!-- 
-				<h2>Novo Atributo</h2>
-			-->
-				
-			</div>
-		</div>
-	</div>
-</div>
-<div id="footer">
-	<p>Designer e Programação de MVLINE</p>
-</div>
+			}
+        	
+        	
+        	?>
+
+	       </ul>
+
+        </div>
+       	<div id="direita">
+        	<h1>Criar Novo Software</h1>
+            <p>(Não use Acento ou caractere especial /%$#@&*, somente letras)</p>
+            
+            <form action="inserirsoftware.php" method="post">
+            	<fieldset>
+                	<legend>Criar Novo Software</legend>
+	                <label for="nome_do_software"> Nome do Software</label>
+    	            <input type="text" id="nome_do_software" name="nome_do_software" />
+                	<label for="linguagem">Linguagem</label>
+                    <select id="linguagem" name="linguagem">
+                    	<option value="php">PHP </option>
+                    	<option value="java">Java</option>
+                    	<option value="pyton">Pyton</option>
+                    </select>
+                    <label for="sgdb">Selecione o SGDB</label>
+                    <select id="sgdb" name="sgdb">
+                    	<option value="mysql">Mysql</option>
+                    </select>
+                    <label for="host">Host do Banco</label>
+                      <input type="text" value="localhost" id="host" name="host" />
+                    <label for="nome_do_banco">Nome Do Banco</label>
+                      <input type="text" value="bd_teste" id="nome_do_banco" name="nome_do_banco" />
+                     <label for="usuario">Usuario do banco</label>
+                     <input type="text" value="mvlineco_root" id="usuario" name="usuario" />
+                     <label for="senha">senha do banco</label>
+                     <input type="text" value="cocacola@12" id="senha" name="senha" />
+                    <input type="submit" value="Criar Software"  />
+                    
+                </fieldset>
+            
+            </form>
+
+	    </div>
+
+        
+    </div>
+
 </body>
 </html>

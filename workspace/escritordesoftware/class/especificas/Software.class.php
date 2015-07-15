@@ -1,78 +1,63 @@
 <?php
 
-/**
- * Classe feita para manipulação do objeto software
- * feita automaticamente com programa gerador de software inventado por
- * Autor Jefferson Uchôa Ponte
- *
- *
- */
-class Software
-{
 
-	private $Id;		
-	private $Nome;
-	private $Software;
-	private $ArrayDeObjetos;
-	private $Banco_de_dados;
+class Software{
+	private $id;
+	private $nome;
+	private $linguagem;
+	private $listaDeObjetos;
+	private $bancoDeDados;
+
 	
-
-	public function setId($id)
-	{
-		$this->Id = $id;
-
+	public function setId($id){
+		$this->id = $id;
 	}
-
-	public function getId()
-	{
-		return $this->Id;
-
+	public function getId(){
+		return $this->id;	
 	}
-
+	
+	public function setNome($nome){
 		
-	public function setNome($nome)
-	{
-		$this->Nome = $nome;
-
-	}
-
-	public function getNome()
-	{
-		return $this->Nome;
-
-	}	
-	public function setSoftware($software)
-	{
-		$this->Software = $software;
-
-	}
-	public function getSoftware()
-	{
-		return $this->Software;
-	}
-	public function setBanco_de_dados($banco_de_dados)
-	{
-		$this->Banco_de_dados = $banco_de_dados;
-	}
-	public function getBanco_de_dados()
-	{
-		return $this->Banco_de_dados;
-	}
-	public function setArrayDeObjetos($array_de_objetos)
-	{
-		$this->ArrayDeObjetos = $array_de_objetos;
-	}
-	public function getArrayDeObjetos(){
-		return $this->ArrayDeObjetos;
-	}
-	public function setBancoDeDados($bancoDeDados){
-		$this->Banco_de_dados = $bancoDeDados;
-	}
-	public function getBancoDeDados()
-	{
-		return $this->Banco_de_dados;
+		$this->nome = $nome;
 		
 	}
+	
+	public function getNome(){
+		return $this->nome;
 		
+	}
+	
+	public function setLinguagem($linguagem){
+		$this->linguagem = $linguagem;
+	}
+	public function getLinguagem(){
+		return $this->linguagem;
+	}
+	
+	public function setBancoDeDados(BancoDeDados $bancoDeDados){
+		$this->bancoDeDados = $bancoDeDados;
+		
+	}
+	public function getBancoDeDados(){
+		return $this->bancoDeDados;
+	}
+	
+	public function addObjetoNaLista(Objeto $objeto){
+		$this->listaDeObjetos[] = $objeto;
+		
+	}
+	public function getListaDeObjetos(){
+		return $this->listaDeObjetos;
+	}
+	
+	public function escreverSoftware(){
+		//escreve o software
+	}
+	
+	
+	
 }
+
+
+
 ?>

@@ -1,78 +1,63 @@
 <?php
 
-/**
- * Classe feita para manipulação do objeto objeto
- * feita automaticamente com programa gerador de software inventado por
- * Autor Jefferson Uchôa Ponte
- *
- *
- */
+
 class Objeto
 {
-
-
-	private $Id;		
-	private $Nome;
-	private $Persistencia;
-	private $Array_de_atributos;
-	private $Id_software;
+	private $id;
+	private $nome;
+	private $listaDeAtributos;
+	private $persistencia;
 	
+	public function setId($id){
+		$this->id = $id;
+	}
 	
-	public function setId($id)
-	{
-		$this->Id = $id;
+	public function getId(){
+		return $this->id;
 	}
-	public function getId()
+	public function __construct()
 	{
-		return $this->Id;
+		$this->listaDeAtributos = array();
+		
 	}
+	
 	public function setNome($nome)
 	{
-		$this->Nome = $nome;
 
-	}
-	public function getNome()
-	{
-		return $this->Nome;
-	}
-	public function setSoftware($software)
-	{
-		$this->Software = $software;
-	}
-	public function getSoftware()
-	{
-		return $this->Software;
-	}	
-	public function setPersistencia($persistencia)
-	{
-		$this->Persistencia= $persistencia;
-	}
-	public function getPersistencia(){
+		//O nome tem que ser sempre sem espaços, com a primeira letra maiúscula
+		//E não vai ter mais do que 101 caracteres. 
+		//também evitaremos os espaços e acentos
 		
-		return $this->Persistencia;
+		$nome = strtoupper(substr($nome, 0, 1)).substr($nome, 1, 100);
+		$novo_nome = preg_replace("/[^a-zA-Z0-9]/", "", $nome);
+		$this->nome = $novo_nome;
 		
 	}
-	public function getBanco_de_dados()
-	{
-		return $this->Persistencia;
-	}
-	public function setArray_de_atributos($arrayDeAtributos)
-	{
-		$this->Array_de_atributos = $arrayDeAtributos;
+	public function getNome(){
+		return $this->nome;
 	}
 	
-	public function getArray_de_atributos()
-	{
-		return $this->Array_de_atributos;
-	}
-
-	public function setIdSoftware($id_software){
-		$this->Id_software = $id_software;
-	}
-	public function getIdSoftware(){
-		return $this->Id_software;
+	
+	public function addAtributo(Atributo $atributo){
+		$this->listaDeAtributos[] = $atributo; 
 		
 	}
+	public function getAtributos(){
 		
+		return $this->listaDeAtributos;
+		
+	}
+	public function setPersistencia($persistencia){
+		$this->persistencia = $persistencia;
+		
+		
+	}
+	public function getPersistencia(){
+		return $this->persistencia;
+		
+		
+	}
 }
+
+
 ?>

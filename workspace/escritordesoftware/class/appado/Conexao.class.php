@@ -13,7 +13,7 @@ class Conexao
 	public static function retornaConexaoComBanco()
 	{
 
-		$conexao = new PDO('mysql:host=localhost;port=3306;dbname=escritordesoftware','root','ponte@12jef');
+		$conexao = new PDO('mysql:host=localhost;port=3306;dbname=escritor7','root','ponte@12jef');
 		return $conexao;
 	}
 		

@@ -1,61 +1,64 @@
 <?php
 
-/**
- * Classe feita para manipulação do objeto atributo
- * feita automaticamente com programa gerador de software inventado por
- * Autor Jefferson Uchôa Ponte
- *
- *
- */
-class Atributo
-{
 
-
-	private $Id;		
-	private $Nome;
-	private $Tipo;
-	private $Tamanho;
-	private $Id_objeto;
+class Atributo{
+	private $id;
+	private $nome;
+	private $tipo;
+	private $indice;
+	private $tipoDeRelacionamentoComObjeto;
 	
-	public function setId($id)
-	{
-		$this->Id = $id;
-	}
-	public function getId()
-	{
-		return $this->Id;
-	}
-	public function setNome($nome)
-	{
-		$this->Nome = $nome;
-
-	}
-	public function getNome()
-	{
-		return $this->Nome;
-	}
-	public function setTipo($tipo)
-	{
-		$this->Tipo = $tipo;
-	}
-	public function getTipo(){
-		return $this->Tipo;
+	
+	public function setId($id){
 		
+		$this->id = $id;
 	}
-	public function setTamanho($tamanho){
-		$this->Tamanho = $tamanho;
+	public function getId(){
+		return $this->id;
 	}
-	public function getTamanho(){
-		return $this->Tamanho;
+	public function setNome($nome){
+		if(is_string($nome)){
+			$novo_nome = preg_replace("/[^a-zA-Z0-9]/", "", $nome);
+			$this->nome = $novo_nome;
+		}		
 	}
+	public function getNome(){
+		return $this->nome;
+	}
+	
+	public function setTipo($tipo){
 		
-	public function setId_objeto($id_objeto)
-	{
-		$this->Id_objeto = $id_objeto;
-	}
-	public function getId_objeto()
-	{
-		return $this->Id_objeto;
+		$this->tipo = $tipo;
+		
 	}	
+	public function getTipo(){
+		return $this->tipo;
+		
+		
+	}
+	
+	public function setIndice($indice){
+		$this->indice = $indice;
+		
+		
+	}
+	public function getIndice(){
+		return $this->indice;
+		
+	}
+	
+	public function setTipoDeRelacionamentoComObjeto($tipoDeRelacionamento){
+		
+		$this->tipoDeRelacionamentoComObjeto = $tipoDeRelacionamento;
+		
+	}
+	public function getTipoDeRelacionamentoComObjeto(){
+		return $this->tipoDeRelacionamentoComObjeto;
+		
+	}
+	
+	
 }
+
+
 ?>

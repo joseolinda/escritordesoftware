@@ -1,130 +1,70 @@
 <?php
 
 
-class AtributoDAO
-{
-	public $Conexao;
 
-
-	public function __construct()
-	{
-		$this->Conexao = Conexao::retornaConexaoComBanco();
-
+class AtributoDAO{
+	private $conexao;
+	
+	
+	public function deletarAtributo(Atributo $atributo){
+		
+		$id = $atributo->getId();
+		
+		$sql = "DELETE FROM atributo WHERE id_atributo='$id'";
+		//echo $sql;
+		
+		if($this->conexao->query($sql)){
+			return true;
+		}else{
+			return false;
+		}
+		
+		
 	}
-
-
-	public function inserir(Atributo $atributo)
-	{
-
-
-
-		if($atributo->getId() != null)
-		{
-			$instrucao = new TSqlUpdate();
-			$instrucao->setEntity("id_atributo");
-				
-				
-			$criteria = new TCriteria();
-			$criteria->add(new TFilter('id_atributo', '=', $Id->getId()));
-			$instrucao->setCriteria($criteria);
-
-
-		}
-		else
-		{
-
-			$instrucao = new TSqlInsert();
-			$instrucao->setEntity("atributo");
-				
-		}
-
-
-
-		if($atributo->getNome()!= null)
-		{
-
-			$instrucao->setRowData("nome", $atributo->getNome());
-
-		}
-
-
-
-		if($atributo->getId_objeto() != null)
-		{
-
-			$instrucao->setRowData("id_objeto", $atributo->getId_objeto());
-
-		}
-
-
-
-		if($atributo->getTamanho() != null)
-		{
-
-			$instrucao->setRowData("tamanho", $atributo->getTamanho());
-
-		}
-		if($atributo->getTipo() != null)
-		{		
-			$instrucao->setRowData("tipo", $atributo->getTipo());		
-		}
-
-
-		echo $instrucao->getInstruction();
-
-		if($this->Conexao->query($instrucao->getInstruction()))
-		{
-
-			echo 'Inserido com sucesso! ';
-			if($atributo->getId() != null)
-			{
-				//O objeto tem id?
-			}
-			else
-			{//Não? Então insira o id
-				$atributo->setId($this->Conexao->lastInsertId());
-			}
-			//Agora pegaremos a lista de atributos que sao objetos
-			//em cada um faremos o seguinte
-			//Primeiro perguntamos se ele existe.
-			//Precisa fazer um foreach aqui
-
-
-
-
-		}
-		else
-		{
-
-			echo 'Erro! ';
-
-		}
-			
-
-
-
-	}//fecha metodo inserir
-	public function retornaLista()
-	{
-
-		$sql = new TSqlSelect();
-		$sql->setEntity('atributo');
-
-
-			
-		$instrucao = $sql->addColumn('id');
-
-		$instrucao = $sql->addColumn('nome');
-
-		$instrucao = $sql->addColumn('software');
-
-		$instrucao = $sql->addColumn('banco_de_dados');
-
-
-		$result = $this->Conexao->query($sql->getInstruction());
-
-		return $result;
+	
+	public function setConexao(PDO $conexao){
+		
+		$this->conexao = $conexao; 
 	}
+	
+	
+	public function inserir(Objeto $objeto, Atributo $atributo)
+	{
 
+		$idDoObjeto = $objeto->getId();
+		
+		$indice = $atributo->getIndice();
+		$nome = $atributo->getNome();
+		$tipo = $atributo->getTipo();
+		$relacionamento = $atributo->getTipoDeRelacionamentoComObjeto();
+
+		
+		
+		$insert = "INSERT into atributo (objeto_id_objeto, nome, tipo, indice, relacionamento_com_objeto) 
+		values($idDoObjeto, '$nome', '$tipo', '$indice', '$relacionamento')";
+		if($this->conexao->query($insert)){
+			return true;
+		}else{
+			return false;
+		}
+		
+		
+		
+	}
+	public function definirComoPrimaryKey(Atributo $atributo)
+	{
+		//objetivo é definir este atributo como primaryKey
+		
+	}
+	public function retirarPrimaryKeyDeObjeto(){
+		
+	}
+	
+	
+	
 }
+
+
+
+
 ?>

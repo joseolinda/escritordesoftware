@@ -1,213 +1,197 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
-<!--
-Design by Free CSS Templates
-http://www.freecsstemplates.org
-Released for free under a Creative Commons Attribution 2.5 License
-
-Name       : WaterDrop 
-Description: A two-column, fixed-width design with dark color scheme.
-Version    : 1.0
-Released   : 20130505
-
--->
-<html>
-<head>
 <?php
-
-function __autoload($classe){
-
-
-	if(file_exists("class/especificas/{$classe}.class.php"))
-	{
+session_start();
+ 
+function __autoload($classe) {
+	if (file_exists ( "class/especificas/{$classe}.class.php" )) {
 		include_once "class/especificas/{$classe}.class.php";
-
-	}elseif (file_exists("class/appado/{$classe}.class.php"))
-	{
+	} elseif (file_exists ( "class/appado/{$classe}.class.php" )) {
 		include_once "class/appado/{$classe}.class.php";
-
 	}
-
-
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Escritor de Software</title>
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<link
-	href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700"
-	rel="stylesheet" type="text/css" />
-<link href="default.css" rel="stylesheet" type="text/css" media="all" />
-<!--[if IE 6]>
-<link href="default_ie6.css" rel="stylesheet" type="text/css" />
-<![endif]-->
+<title>Escritor De Software</title>
+<link rel="stylesheet" type="text/css" href="style/style.css" />
 </head>
+
 <body>
-	<div id="wrapper">
-		<div id="header">
-			<div id="logo">
-				<h1>
-					<a href="#">Escritor de Software</a>
-				</h1>
-				<p>
-					Frase de Efeito <a href="http://www.freecsstemplates.org/"
-						rel="nofollow"></a>
-				</p>
-			</div>
-		</div>
-		<!--
-	<div id="menu">
-	  
-		<ul>
-			<li ><a href="#">Home</a></li>
-			<li class="current_page_item"><a href="#">Coleção</a></li>
-			<li><a href="#">Loja Virtual</a></li>
-			<li  ><a href="#">Blog</a></li>
-			<li><a href="#">Contato</a></li>
 
-
-		</ul>
-		
-		
+	<div id="topo">
+		<img src="images/logo.png" alt="" />
 	</div>
-	
-	
-	<div id="banner"><img src="images/header-image-bg.jpg" width="1200" height="400" alt="" /></div>
-	-->
 
-		<div id="three-columns">
-			<div class="content">
+	<div id="conteiner">
+		<?php
+		if ($_GET ['idsoftware']) {
+		 // vou fechar isso lá no final
+			$_SESSION['meuSoftwareId'] = $_GET['idsoftware'];
+			$conexao = Conexao::retornaConexaoComBanco();
+			
+			$softwaredao = new SoftwareDAO();
+			$softwaredao->setConexao($conexao);
+			
+			
+			
+			$software = new Software ();
+			$software->setId ( $_GET ['idsoftware'] );
+			
+			$software = $softwaredao->retornaSoftwareDetalhado($software);
+			
+			
+			?>	
+				
+		<div id="esquerda">
 
-				<?php
+			<?php 
+			echo '<h1>'.$software->getNome().'</h1>';
+			echo '<h2>Informações:</h2>
+				<p>Linguagem: '.$software->getLinguagem();
+			
+			if($software->getBancoDeDados()){
+				echo '; Banco: '.$software->getBancoDeDados()->getSistemaGerenciadorDeBancoDeDados().'</p>';
+			}
+			?> 
+			
+			
+			<h2>Objetos:</h2>
 
-
-				if(isset($_GET['software_id']))
-				{
-					echo '<div id="column1">';
-
-					$software = new Software();
-					$software->setId($_GET['software_id']);
-					$softwareDao = new SoftwareDAO();
-					$software = $softwareDao->retornaSoftware($software);
-
-					print_r($software);
-					echo '<h2>Software Selecionado: '.$software->getNome().'</h2>';
-
-					if($software->getArrayDeObjetos() != null){
-						echo '<p>Seus objetos:</p>';
-						echo '<ul>';
-						foreach ($software->getArrayDeObjetos() as $linha)
+			<?php 
+			if($software->getListaDeObjetos()){
+			
+				foreach ($software->getListaDeObjetos() as $objeto){
+					
+					echo '<div class="classe">
+							<h1>'.$objeto->getNome().'<img src="images/delete.png" alt="" width="20"/></h1>
+								<ul>';
+					foreach ($objeto->getAtributos() as $atributo){
+						
+						if($atributo->getIndice() == "padrao"){
+							echo '		<li>'.$atributo->getNome().' - '.$atributo->getTipo().'<a href="deletaratributo.php?id_atributo='.$atributo->getId().'"> <img src="images/delete.png" alt="" width="20"/></a></li>';	
+						}else
 						{
-							
-							
-							echo '<li>'.$linha->getNome().'</li>';
-							echo '<ul>';
-							foreach ($linha->getArray_de_atributos() as $linha_atributo){
-								echo '<li>'.$linha_atributo->getNome().'('.$linha_atributo->getTipo().')</li>';
-								
-							}
-							echo '</ul>';
+							echo '		<li>'.$atributo->getNome().' - '.$atributo->getTipo().'; '.$atributo->getIndice() .'<img src="images/delete.png" alt="" width="20"/></li>';
 						}
-						echo '</ul>';
-						}
-						echo '
-			</div>
-			<div id="column2">
-			<h2>Adicionar Objeto a um Software</h2>';
-						include 'forms/forminserirobjeto.php';
-						echo '
+						 						
+
+
+					}
+					echo '
+				
+							
+
+
+
+								</ul>
+								<p>	<a href="#"> Adicionar Atributo a este Objeto</a></p>
+
+							</div>
+							'; 
+				}	
+
+			}
+			
+			echo '<a href="escreversoftware.php?idsoftware='. $_GET ['idsoftware'].'">Escrever Software</a>';
+			
+			
+			?>
+			
 		</div>
-		<div id="column3">
-		<h2>Adicionar Atributo a Um Objeto</h2>';
-							
-
-						//tem que oferecer o novo atributo para um objeto especifico.
-						//entao precisamos mostrar a lista de objetos como option no form.
-						//mas que lista de objetos, de todos os softwares? Não, apenas deste software.
-						//já está carregado
-						if($software->getArrayDeObjetos() != null)
+		<div id="direita">
+			
+			<form action="insereobjeto.php" method="post">
+			<fieldset>
+			<legend>Inserir Objeto A Este Software</legend>
+			<label for="nomedoobjeto">Nome do Objeto</label>
+			<input type="text" id="nomedoobjeto" name="nomedoobjeto" />
+			<label for="persistencia">Persistencia</label>
+			<select name="persistencia" id="persistencia">
+				<option value="banco">Banco De Dados</option>
+			</select>
+			<input type="submit" value="Inserir Objeto" />
+			
+			</fieldset>
+			</form>
+			<hr>
+			<form action="insereatributo.php" method="post">
+			<fieldset>
+				<legend>Inserir Atributo a um Objeto</legend>
+				<label for="nomedoatributo">Nome do Atributo</label>
+				<input type="text" id="nomedoatributo" name="nomedoatributo" />
+				<label for="objeto">Selecione um objeto</label>
+				<select id="objeto" name="objeto" >
+					
+						<?php 
+						if($software->getListaDeObjetos())
 						{
-							
-							
-							
-							
-							
-							echo '
-									<form action="inseriratributo.php" method="post">
-										<fieldset>
-											<legend>
-												Formulário para adicionar atributo
-											</legend>
-				
-											<input type="hidden" name="id" id="id" />
-				
-											<label for="nome">
-												Nome:
-											</label>
-											<input type="text" name="nome" id="nome" />
-
-											<label for="tipo">
-												Tipo:
-											</label>
-											<select  name="tipo" id="tipo" >
-												<option value="texto">Texto</option>
-												<option value="texto_longo">Texto Longo</option>
-												<option value="int">Inteiro</option>
-												<option value="float">Números Decimais</option>
-												<option value="objeto">Objeto</option>
-											</select>
 			
-											<label for="tamanho">
-												Tamanho:
-											</label>
-											<input type="text" name="tamanho" id="tamanho" />
-			
-			
-			
-											<label for="id_objeto">
-												Objeto:
-											</label>
-											<select name="id_objeto" id="id_objeto">';
-
-							foreach ($software->getArrayDeObjetos() as $objeto)
+						foreach ($software->getListaDeObjetos() as $objeto)
 							{
 								echo '<option value="'.$objeto->getId().'">'.$objeto->getNome().'</option>';
-								
+					
 							}
-											
-									echo '	</select> 
-			
-			
-											<input type="submit" value="Cadastrar">
-			
-											</fieldset>
-										</form>';
-
-
 						}
+						?>
+					
+				</select>
+				
+				<label for="tipodeatributo">Tipo </label>
+				<select id="tipodeatributo" name="tipodeatributo">
+				
+					<option value="string">Texto Nativo</option>
+					<option value="int">Inteiro Nativo</option>
+					<option value="float">Ponto Flutuante Nativo</option>
+					<option value="file">Arquivo Nativo</option>
+					<?php 
+						if($software->getListaDeObjetos())
+						{
+			
+						foreach ($software->getListaDeObjetos() as $objeto)
+							{
+								echo '<option value="'.$objeto->getNome().'">'.$objeto->getNome().' Criado pelo Usuário</option>';
+					
+							}
+						}
+					?>
+					
+					
+				</select>
+				<label for="indice">Índice</label>
+				
+				<select id="indice" name="indice">
+					<option value="padrao">Padrão</option>
+					<option value="primary_key">Primary key</option>
+				</select>
+				<label for="relacionamento_com_outro_tipo">Relacionamento com outro tipo</label>
+				<select name="relacionamento_com_outro_tipo" id="relacionamento_com_outro_tipo">
+					<option value="padrao">Padrão</option>
+					<option value="n:n">N:N</option>
+					<option value="n:1">N:1</option>
+					<option value="1:1">1:1</option>
+		
+				</select>
+
+				<input type="submit" value="Inserir Atributo" />
+				
+			
+			</fieldset>
+			
+			
+			</form>
 
 
-
-						echo '</div>';
-
-
-				}
-
-
-
-
-
-				?>
-
-
-
-			</div>
 		</div>
+	<?php
+		}
+		// fechando o if($_GET['idsoftware'])
+		
+		?>
+			
+
+
 	</div>
-	<div id="footer">
-		<p>Designer e Programação de MVLINE</p>
-	</div>
+
 </body>
 </html>

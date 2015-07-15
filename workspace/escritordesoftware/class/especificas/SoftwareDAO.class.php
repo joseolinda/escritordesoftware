@@ -1,181 +1,183 @@
 <?php
 
 
-class SoftwareDAO
-{
-	public $Conexao;
+class SoftwareDAO{
+	
+	public $conexao;
 
-
-	public function __construct()
-	{
-		$this->Conexao = Conexao::retornaConexaoComBanco();
-
+	
+	public function setConexao(PDO $conexao){
+		$this->conexao = $conexao;
+		
 	}
-
-
-	public function inserir(Software $software)
-	{
-
-
-
-		if($software->getId() != null)
-		{
-			$instrucao = new TSqlUpdate();
-			$instrucao->setEntity("id");
-
-
-			$criteria = new TCriteria();
-			$criteria->add(new TFilter('id', '=', $Id->getId()));
-			$instrucao->setCriteria($criteria);
-
-
+	/**
+	 * Serve para inserir nome, linguagem em uma tabela software, 
+	 * retorna o id desta insersao
+	 * @param Software $software
+	 */
+	public function inserir(Software $software){
+		//Primeiro Passo - Inserir os dados basicos do software: nome e linguagem, pegando o Ultimo Id inserido.
+		$nome = $software->getNome();
+		$linguagem = $software->getLinguagem();
+		$insert = "INSERT into software(nome, linguagem) values('$nome', '$linguagem')";
+		if($this->conexao->query($insert)){
+			//echo 'Software Inserido Com sucesso! -'. $insert;
+			
+			$sgdb = $software->getBancoDeDados()->getSistemaGerenciadorDeBancoDeDados();
+			$host = $software->getBancoDeDados()->getHost();
+			$pass = $software->getBancoDeDados()->getPass();
+			$nomeDoBanco = $software->getBancoDeDados()->getNomeDoBanco();
+			$idDoSoftware = $this->conexao->lastInsertId();
+			
+			
+			
+			//Segundo Passo - Inserir dados do BancoDeDados
+			$insert2 = "INSERT into banco_de_dados
+					(nome_do_banco, sistema_gerenciador_de_banco, host, pass, software_id_software) 
+					values('$nomeDoBanco', '$sgdb', '$host', '$pass', $idDoSoftware)";
+			
+			if($this->conexao->query($insert2)){
+				//echo '<br>Dados do banco inseridos com sucesso! '. $insert2;
+				//Terceiro Passo - Retornar o ultimo ID do software inserido para quem fez a insersão.
+				
+				return $idDoSoftware;
+			}else{
+				//echo $insert2;
+				echo 'Erro ao tentar inserir dados referente ao banco';
+				return 0;
+			}
+			
+			
 		}
 		else
 		{
-
-			$instrucao = new TSqlInsert();
-			$instrucao->setEntity("software");
-
-		}
-
-
-
-		if($software->getNome()!= null)
-		{
-
-			$instrucao->setRowData("nome", $software->getNome());
-
-		}
-
-
-
-		echo $instrucao->getInstruction();
-
-
-		if($this->Conexao->query($instrucao->getInstruction()))
-		{
-
-			echo 'Inserido com sucesso! ';
-			if($software->getId() != null)
-			{
-				//O objeto tem id?
-			}
-			else
-			{//Não? Então insira o id
-				$software->setId($this->Conexao->lastInsertId());
-			}
-			//Agora pegaremos a lista de atributos que sao objetos
-			//em cada um faremos o seguinte
-			//Primeiro perguntamos se ele existe.
-			//Precisa fazer um foreach aqui
-
-			//Vamos redirecionar para a pagina de software.
-
-			echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=software.php?software_id='.$software->getId().'">';
+			echo 'Erro ao tentar inserir software'. $insert;
+			return 0;
 			
 			
-
-
-
 		}
-		else
-		{
+		
 
-			echo 'Erro! ';
-
-		}
-			
+		
+		
 
 
-
-	}//fecha metodo inserir
-	public function retornaLista()
-	{
-
-		$sql = new TSqlSelect();
-		$sql->setEntity('software');
-
-		$instrucao = $sql->addColumn('id_software');
-		$instrucao = $sql->addColumn('nome');
-
-		echo $sql->getInstruction();
-		$result = $this->Conexao->query($sql->getInstruction());
-
-		return $result;
+		
+		
 	}
-	public function retornaSoftware(Software $software){
+	public function retornaSoftwaresComId(){
 		
-		if($software->getId() != null){
 
+		$sql = "SELECT * FROM software ORDER BY id_software DESC LIMIT 10";
+		$result = $this->conexao->query($sql);
+		foreach ($result as $linha)
+		{
+			
+			
+			$software = new Software();
+			$software->setNome($linha['nome']);
+			$software->setLinguagem($linha['linguagem']);
+			$software->setId($linha['id_software']);
+			$softwares[] = $software;
+			
+			
+		}
 		
-			$conexao = $this->Conexao;
-
-			$id = $software->getId();
-			$sql = "SELECT 
-			software.id_software, 
-			software.nome as software_nome, 
-			objeto.nome as objeto_nome, 
-			objeto.id_objeto
-			FROM software 
-			LEFT JOIN objeto 
-			ON software.id_software = objeto.id_software 
-			WHERE software.id_software = $id";
-
-			$result = $this->Conexao->query($sql);
-			$n = 0;
+		if(isset($softwares)){
+			return $softwares;
+		}else{
+			return null;
+		}
+	}
+	public function retornaSoftwareDetalhado(Software $software)
+	{
+		if($software->getId())
+		{
+			//Pega dados do software. 
+			$idSoftware = $software->getId();
+			$selectSoftware = "Select * From software Where id_software = $idSoftware";
+			$result = $this->conexao->query($selectSoftware);
 			foreach ($result as $linha)
 			{
 				
-				if($linha['objeto_nome'] != null)
-				{
-					$objeto = new Objeto();
-					$objeto->setNome($linha['objeto_nome']);
-					$objeto->setId($linha['id_objeto']);
-
-					$objeto->setIdSoftware($linha['id_software']);
-					
-					$id_objeto = $objeto->getId();
-					$sql_atributo = "SELECT * FROM atributo WHERE id_objeto = $id_objeto";
-					$result_atributo = $conexao->query($sql_atributo);
-					$n_atributo = 0;
-					foreach ($result_atributo as $linha_atributo)
-					{
-						
-						$atributo = new Atributo();
-						$atributo->setId($linha_atributo['id_atributo']);
-						$atributo->setNome($linha_atributo['nome']);
-						$atributo->setTipo($linha_atributo['tipo']);
-						
-						$arrayDeAtributos[$n_atributo] = $atributo;
-						
-						$n_atributo++;
-					}
-					
-					if(isset($arrayDeAtributos))
-					{
-						$objeto->setArray_de_atributos($arrayDeAtributos);
-					}
-					
-					$arrayObjeto[$n] = $objeto;
-					
-					$n++;
-					
-					
-				}
-				$software->setNome($linha['software_nome']);
-
-			}
-
-			
-			if(isset($arrayObjeto)){
-				$software->setArrayDeObjetos($arrayObjeto);
+				$software->setLinguagem($linha['linguagem']);
+				$software->setNome($linha['nome']);
 				
 			}
 
+			//Buscaremos dados a respeito do banco de dados escolhido. 
+			$selectBanco = "SELECT * FROM banco_de_dados WHERE software_id_software";
+			$result = $this->conexao->query($selectBanco);
+			$banco = new BancoDeDados();
+			foreach ($result as $linha)
+			{
+				$banco->setSistemaGerenciadorDeBancoDeDados($linha['sistema_gerenciador_de_banco']);
+				$banco->setNomeDoBanco($linha['nome_do_banco']);
+				$banco->setHost($linha['host']);
+				$banco->setPass($linha['pass']);
+				$banco->setUsuario($linha['usuario']);
+				
+					
+				
+			}
+			
+			if($banco){
+				$software->setBancoDeDados($banco);
+			}
+			
+			//Pegaremos agora a lista de Objetos
+			//Aqui também podemos buscar os atributos, mas implementarei isso daqui a pouco
+			
+			$selectObjetos = "SELECT * FROM objeto WHERE software_id_software = $idSoftware";
+			$result = $this->conexao->query($selectObjetos);
+			foreach ($result as $linha)
+			{
+				$objeto = new Objeto();
+				$objeto->setNome($linha['nome']);
+				$objeto->setPersistencia($linha['persistencia']);
+				$objeto->setId($linha['id_objeto']);
+				$idObjeto = $linha['id_objeto'];
+				
+				$selectAtributo = "SELECT * FROM atributo WHERE objeto_id_objeto = $idObjeto";
+				$resultAtributo = $this->conexao->query($selectAtributo);
+				foreach ($resultAtributo as $linhaatributo){
+					$atributo = new Atributo();
+					$atributo->setId($linhaatributo['id_atributo']);
+					$atributo->setNome($linhaatributo['nome']);
+					$atributo->setTipo($linhaatributo['tipo']);
+					$atributo->setIndice($linhaatributo['indice']);
+					$atributo->setTipoDeRelacionamentoComObjeto($linhaatributo['relacionamento_com_objeto']);
+					$objeto->addAtributo($atributo);
+					
+				}
+				
+
+				
+				$software->addObjetoNaLista($objeto);
+				
+				
+			}
+			
+			return $software;
+			
+			
 		}
-		return $software;
-
+		else
+		{
+			
+			return null;
+		}
+		
 	}
-
+	
+	
+	
+	
 }
+
+
+
+
 ?>
+
+
