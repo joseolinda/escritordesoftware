@@ -1,0 +1,30 @@
+<?php
+						
+						
+class EnderecoDAO
+{
+	private $Rua;
+	private $Numero;
+	private $Bairro;
+	private $Uf;
+	private $Estado;
+	public function setRua()
+	{
+	}
+	public function setNumero()
+	{
+	}
+	public function setBairro()
+	{
+	}
+	public function setUf()
+	{
+	}
+	public function setEstado()
+	{
+	}
+
+									
+}
+		
+?>
