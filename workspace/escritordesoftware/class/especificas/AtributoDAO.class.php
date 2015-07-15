@@ -104,43 +104,6 @@ class AtributoDAO
 
 
 	}//fecha metodo inserir
-	
-	public function retornaArrayDeAtributos(Objeto $objeto)
-	{
-		if($objeto->getId() != null)
-		{
-			$idDoObjeto = $objeto->getId();
-			$sql = "SELECT 
-					atributo.id_atributo, 
-					atributo.nome, 
-					atributo.tipo, 
-					atributo.tamanho, 
-					atributo.id_objeto FROM atributo WHERE id_objeto = $idDoObjeto";
-			$result = $this->Conexao->query($sql);
-			$n = 0;
-			foreach ($result as $linha)
-			{
-				$atributo = new Atributo();
-				$atributo->setId($linha['id_atributo']);
-				$atributo->setId_objeto($linha['id_objeto']);
-				$atributo->setNome($linha['nome']);
-				$atributo->setTipo($linha['tipo']);
-				$atributo->setTamanho($linha['tamanho']);
-				
-				
-				$arrayDeAtributos[$n] = $atributo;
-				$n++;
-			}
-		}
-		
-		if($n>0)
-		{
-		
-		return $arrayDeAtributos;
-		}
-	}
-	
-	
 	public function retornaLista()
 	{
 

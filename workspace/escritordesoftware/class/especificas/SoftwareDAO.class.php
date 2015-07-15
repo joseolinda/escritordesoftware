@@ -103,43 +103,74 @@ class SoftwareDAO
 
 		return $result;
 	}
-	/**
-	 * a partir de um objeto software que só possui o Id, nós 
-	 * retornaremos o mesmo objeto com todo o seu conteúdo 
-	 * armazenado em banco de dados
-	 * 
-	 * @param Software $software
-	 * @return Software
-	 */
 	public function retornaSoftware(Software $software){
 		
-		if($software->getId() != null)
-		{
+		if($software->getId() != null){
 
+		
 			$conexao = $this->Conexao;
+
 			$id = $software->getId();
-			$sql = "
-					SELECT 
-					software.id_software, 
-					software.nome as software_nome 
-					FROM software 
-					WHERE software.id_software = $id";
+			$sql = "SELECT 
+			software.id_software, 
+			software.nome as software_nome, 
+			objeto.nome as objeto_nome, 
+			objeto.id_objeto
+			FROM software 
+			LEFT JOIN objeto 
+			ON software.id_software = objeto.id_software 
+			WHERE software.id_software = $id";
 
 			$result = $this->Conexao->query($sql);
+			$n = 0;
 			foreach ($result as $linha)
 			{
-				$software->setNome($linha['software_nome']);
 				
+				if($linha['objeto_nome'] != null)
+				{
+					$objeto = new Objeto();
+					$objeto->setNome($linha['objeto_nome']);
+					$objeto->setId($linha['id_objeto']);
+
+					$objeto->setIdSoftware($linha['id_software']);
+					
+					$id_objeto = $objeto->getId();
+					$sql_atributo = "SELECT * FROM atributo WHERE id_objeto = $id_objeto";
+					$result_atributo = $conexao->query($sql_atributo);
+					$n_atributo = 0;
+					foreach ($result_atributo as $linha_atributo)
+					{
+						
+						$atributo = new Atributo();
+						$atributo->setId($linha_atributo['id_atributo']);
+						$atributo->setNome($linha_atributo['nome']);
+						$atributo->setTipo($linha_atributo['tipo']);
+						
+						$arrayDeAtributos[$n_atributo] = $atributo;
+						
+						$n_atributo++;
+					}
+					
+					if(isset($arrayDeAtributos))
+					{
+						$objeto->setArray_de_atributos($arrayDeAtributos);
+					}
+					
+					$arrayObjeto[$n] = $objeto;
+					
+					$n++;
+					
+					
+				}
+				$software->setNome($linha['software_nome']);
+
+			}
+
+			
+			if(isset($arrayObjeto)){
+				$software->setArrayDeObjetos($arrayObjeto);
 				
 			}
-			//antes de retornar o software, iremos buscar seus objetos,
-			
-			$objetodao = new ObjetoDAO();
-			$arraydeobjetos = $objetodao->retornaArrayDeObjetos($software);
-			$software->setArrayDeObjetos($arraydeobjetos);
-			 
-			//colocar em um array, e setálos. Como faremos?
-			//vamos delegar essa função à classe ObjetoDAO 
 
 		}
 		return $software;

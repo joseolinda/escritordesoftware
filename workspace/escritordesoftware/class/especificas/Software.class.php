@@ -10,11 +10,12 @@
 class Software
 {
 
-	private $Id;
+	private $Id;		
 	private $Nome;
+	private $Software;
 	private $ArrayDeObjetos;
 	private $Banco_de_dados;
-
+	
 
 	public function setId($id)
 	{
@@ -28,7 +29,7 @@ class Software
 
 	}
 
-
+		
 	public function setNome($nome)
 	{
 		$this->Nome = $nome;
@@ -39,6 +40,15 @@ class Software
 	{
 		return $this->Nome;
 
+	}	
+	public function setSoftware($software)
+	{
+		$this->Software = $software;
+
+	}
+	public function getSoftware()
+	{
+		return $this->Software;
 	}
 	public function setBanco_de_dados($banco_de_dados)
 	{
@@ -61,8 +71,8 @@ class Software
 	public function getBancoDeDados()
 	{
 		return $this->Banco_de_dados;
-
+		
 	}
-
+		
 }
 ?>

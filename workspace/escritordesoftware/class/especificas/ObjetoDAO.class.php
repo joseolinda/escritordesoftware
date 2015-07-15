@@ -119,45 +119,6 @@ class ObjetoDAO
 
 		return $result;
 	}
-	public function retornaArrayDeObjetos(Software $software)
-	{
-		if($software->getId() != null)
-		{
-			$idDoSoftware = $software->getId();
-			$sql = "SELECT 
-					objeto.id_objeto, 
-					objeto.nome as nome_objeto, 
-					objeto.id_software, 
-					objeto.persistencia
-					FROM objeto 
-					WHERE id_software =$idDoSoftware ";
-			$result = $this->Conexao->query($sql);
-			$n = 0;
-			foreach ($result as $linha)
-			{
-				
-				$objeto = new Objeto();
-				$objeto->setId($linha['id_objeto']);
-				$objeto->setNome($linha['nome_objeto']);
-				$objeto->setIdSoftware($linha['id_software']);
-				$objeto->setPersistencia($linha['persistencia']);
-				$atributodao = new AtributoDAO();
-				$arrayDeAtributos = $atributodao->retornaArrayDeAtributos($objeto);
-				//Em cada linha iremos buscar o array de atributos
-				$objeto->setArray_de_atributos($arrayDeAtributos);		
-				
-				$arrayDeObjetos[$n] = $objeto;
-				$n++;
-				
-			}
-			
-			
-		}
-		if($n>0)
-		{
-		return $arrayDeObjetos;
-		}
-	}
 
 }
 ?>
