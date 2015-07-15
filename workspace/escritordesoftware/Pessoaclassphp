@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * Classe feita para manipulação do objeto pessoa 
+ * feita automaticamente com programa gerador de software inventado por						
+ * Autor Jefferson Uchôa Ponte
+ *						
+ *
+ */												
+class Pessoa
+{
+
+
+	private $Nome;
+
+	private $Telefone;
+
+	private $Email;
+
+	public function setNome($nome)
+	{
+		$this->Nome = $nome;
+
+	}
+
+	public function getNome($nome)
+	{
+		return $this->Nome;
+
+	}
+
+
+	public function setTelefone($telefone)
+	{
+		$this->Telefone = $telefone;
+
+	}
+
+	public function getTelefone($telefone)
+	{
+		return $this->Telefone;
+
+	}
+
+
+	public function setEmail($email)
+	{
+		$this->Email = $email;
+
+	}
+
+	public function getEmail($email)
+	{
+		return $this->Email;
+
+	}
+
+
+}
+?>

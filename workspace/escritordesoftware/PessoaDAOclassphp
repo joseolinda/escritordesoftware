@@ -1,0 +1,22 @@
+<?php
+						
+						
+class PessoaDAO
+{
+	private $Nome;
+	private $Telefone;
+	private $Email;
+	public function setNome()
+	{
+	}
+	public function setTelefone()
+	{
+	}
+	public function setEmail()
+	{
+	}
+
+									
+}
+		
+?>
